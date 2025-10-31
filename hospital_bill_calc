@@ -1,0 +1,248 @@
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <string>
+
+
+using namespace std;
+
+const double STD_ROOM = 1500;
+const double IN_CARE_ROOM = 2500;
+const double IN_CARE_LEVEL = 5000;
+
+/**
+ * This function reads a file and sets the values of variables
+ *
+ * @Param   int acct, int& days, double& sur,
+            double& ans, double& med, bool& check
+ *
+ * @Return  no return
+ */
+void getRecord(int acct, int& days, double& sur,
+               double& ans, double& med, bool& check);
+
+/**
+ * This function calculates the charges of a patient who didnt stay at a room
+ *
+ * @Param    double sur, double ans, double med, double& total
+ *
+ * @Return   no return
+ */
+void getCharges(double sur, double ans, double med, double& total);
+
+/**
+ * This function calculates the charges of a patient who stayed at a room
+ *
+ * @Param    double sur, double ans, double med, int days,
+             double& total, double& room)
+ *
+ * @Return   no return
+ */
+void getCharges(double sur, double ans, double med, int days,
+                double& total, double& room);
+
+/**
+ * This function prints the bill of a patient(s)
+ *
+ * @Param    int acct, double sur, double ans, double med,
+             double room, double total
+ *
+ * @Return   no return
+ */
+void printReport(int acct, double sur, double ans, double med,
+                 double room, double total);
+
+int main() {
+
+    int records_num;
+    int record_count = 1;
+    int acct;
+    bool check = false;
+    int acc_num_count = 1;
+    int days = 0;
+    double sur = 0;
+    double ans = 0;
+    double med = 0;
+    double total = 0;
+    double room = 0;
+
+
+
+
+    cin >> records_num;
+
+    if (records_num < 1 || records_num > 5) {
+
+        cout << "Invald number of records requested." << endl;
+
+    }
+
+    else {
+
+        while (record_count <= records_num) {
+
+            days = 0;
+            sur = 0;
+            ans = 0;
+            med = 0;
+            total = 0;
+            room = 0;
+            check = false;
+
+            cin >> acct;
+
+            getRecord(acct, days, sur, ans, med, check);
+
+
+            if (check == false) {
+
+                cout << "Account " << acc_num_count << " not found:"
+                     << endl;
+
+            }
+
+            else {
+
+                if (days == 0) {
+
+                    getCharges(sur, ans, med, total);
+
+                }
+
+                else {
+
+                    getCharges(sur, ans, med, days, total, room);
+
+                }
+
+                printReport(acct, sur, ans, med, room, total);
+
+            }
+
+           acc_num_count ++;
+           record_count++;
+
+        }
+
+    }
+
+    return 0;
+}
+
+void getRecord(int acct, int& days, double& sur,
+               double& ans, double& med, bool& check) {
+
+    int search_acct;
+    bool search_found = false;
+
+    ifstream inFile;
+    inFile.open("patient_records.txt");
+
+    if (!inFile) {
+
+        cout << "Error opening file!" << endl;
+
+    }
+
+    else {
+
+        while (!search_found && (inFile >> search_acct >> days
+               >> sur >> ans >> med)) {
+
+            if (search_acct == acct) {
+
+                search_found = true;
+                check = true;
+            }
+        }
+
+    }
+
+
+    inFile.close();
+
+}
+
+void getCharges(double sur, double ans, double med, double& total) {
+
+    total = sur + ans + med;
+
+}
+
+void getCharges(double sur, double ans, double med, int days,
+                double& total, double& room) {
+
+       double roomRate = STD_ROOM;
+
+        if (sur > IN_CARE_LEVEL) {
+
+            roomRate = IN_CARE_ROOM;
+            room = roomRate * days;
+
+            total = sur + ans + med + room;
+
+        }
+
+        else {
+
+            room = roomRate * days;
+            total = sur + ans + med + room;
+
+        }
+
+
+}
+
+void printReport(int acct, double sur, double ans, double med,
+                 double room, double total) {
+
+    if (!room) {
+
+        cout << fixed << setprecision(2) << endl;
+        cout << string(50, '-') << endl;
+        cout << "** 135 Medical Center Bill **\n" << endl;
+        cout << "Account number: " << acct << endl << endl;
+        cout << string(50, '-') << endl;
+        cout << right << setw(12) << "Services"
+             << right << setw(12) << "Amount" << endl;
+        cout << string(50, '-') << endl;
+        cout << right << setw(12) << "Surgery"
+             << right << setw(12) << sur << endl;
+        cout << right << setw(12) << "Anesthesia"
+             << right << setw(12) << ans << endl;
+        cout << right << setw(12) << "Medication"
+             << right << setw(12) << med << endl;
+        cout << string(50, '-') << endl;
+        cout << string(50, '-') << endl;
+        cout << right << setw(12) << "Total"
+             << right << setw(12) << total << endl << endl << endl;
+        cout << string(50, '-') << endl;
+
+    }
+
+    else {
+
+        cout << fixed << setprecision(2) << endl;
+        cout << string(50, '-') << endl;
+        cout << "** 135 Medical Center Bill **\n" << endl;
+        cout << "Account number: " << acct << endl << endl;
+        cout << string(50, '-') << endl;
+        cout << right << setw(12) << "Services"
+             << right << setw(12) << "Amount" << endl;
+        cout << string(50, '-') << endl;
+        cout << right << setw(12) << "Surgery"
+             << right << setw(12) << sur << endl;
+        cout << right << setw(12) << "Anesthesia"
+             << right << setw(12) << ans << endl;
+        cout << right << setw(12) << "Medication"
+             << right << setw(12) << med << endl;
+        cout << right << setw(12) << "Room"
+             << right << setw(12) << room << endl;
+        cout << string(50, '-') << endl;
+        cout << string(50, '-') << endl;
+        cout << right << setw(12) << "Total"
+             << right << setw(12) << total << endl << endl << endl;
+        cout << string(50, '-') << endl;
+
+    }
+}
