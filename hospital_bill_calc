@@ -55,16 +55,7 @@ void printReport(int acct, double sur, double ans, double med,
 int main() {
 
     int records_num;
-    int record_count = 1;
-    int acct;
-    bool check = false;
-    int acc_num_count = 1;
-    int days = 0;
-    double sur = 0;
-    double ans = 0;
-    double med = 0;
-    double total = 0;
-    double room = 0;
+
 
 
 
@@ -79,15 +70,18 @@ int main() {
 
     else {
 
+        int record_count = 1;
+        int acc_num_count = 1;
+
         while (record_count <= records_num) {
 
-            days = 0;
-            sur = 0;
-            ans = 0;
-            med = 0;
-            total = 0;
-            room = 0;
-            check = false;
+            int acct;
+            bool check = false;
+            int days = 0;
+            double sur = 0;
+            double ans = 0;
+            double med = 0;
+
 
             cin >> acct;
 
@@ -102,6 +96,9 @@ int main() {
             }
 
             else {
+
+                double total = 0;
+                double room = 0;
 
                 if (days == 0) {
 
@@ -119,7 +116,7 @@ int main() {
 
             }
 
-           acc_num_count ++;
+           acc_num_count++;
            record_count++;
 
         }
@@ -132,8 +129,7 @@ int main() {
 void getRecord(int acct, int& days, double& sur,
                double& ans, double& med, bool& check) {
 
-    int search_acct;
-    bool search_found = false;
+
 
     ifstream inFile;
     inFile.open("patient_records.txt");
@@ -145,6 +141,9 @@ void getRecord(int acct, int& days, double& sur,
     }
 
     else {
+
+        int search_acct;
+        bool search_found = false;
 
         while (!search_found && (inFile >> search_acct >> days
                >> sur >> ans >> med)) {
@@ -196,7 +195,7 @@ void getCharges(double sur, double ans, double med, int days,
 void printReport(int acct, double sur, double ans, double med,
                  double room, double total) {
 
-    if (!room) {
+    if (room < 0.1) {
 
         cout << fixed << setprecision(2) << endl;
         cout << string(50, '-') << endl;
